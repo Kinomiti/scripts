@@ -1,7 +1,7 @@
 #!/bin/bash
 
 nvimPath=/var/tmp/neovim
-if [ ! -e $nvimpath ]; then
+if [ ! -e $nvimPath ]; then
 	git clone https://github.com/neovim/neovim.git $nvimPath
 fi
 cd $nvimPath
