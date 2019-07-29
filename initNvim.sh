@@ -1,14 +1,20 @@
 #!/bin/bash
 
-cd `dirname $0`
-nvimPath=~/neovim
-if type nvim; then
-	echo "nvim"
-else
+nvimPath=/var/tmp/neovim
+if [ ! -e $nvimpath ]; then
 	git clone https://github.com/neovim/neovim.git $nvimPath
-	cd $nvimPath
-	pwd
+fi
+cd $nvimPath
+if [ ! -e build ]; then
 	make CMAKE_BUILD_TYPE=RelWithDebInfo
+fi
+if !(type nvim >/dev/null 2>&1); then
+	sudo make install
+fi
+git fetch
+git diff --exit-code --quiet
+if [[ $? -eq 1 ]]; then
+	git merge
 	sudo make install
 fi
 
@@ -17,10 +23,9 @@ deinCachePath=~/.cache/dein
 if [ -e $deinCachePath ]; then
 	echo $deinCachePath
 else
-	installerPath=~/deinInstaller.sh
+	installerPath=/var/tmp/deinInstaller.sh
 	curl -sS https://raw.githubusercontent.com/Shougo/dein.vim/master/bin/installer.sh > $installerPath
 	sh $installerPath $deinCachePath
-	rm $installerPath
 fi
 
 cd `dirname $0`
